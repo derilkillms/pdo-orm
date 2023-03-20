@@ -26,5 +26,6 @@ $CFG->dbuser    = 'root';
 $CFG->dbpass    = '';
 $CFG->prefix    = 'd_';
 
-require_once(__DIR__ .'/autoload.php');
+require_once(__DIR__ .'/vendor/autoload.php');
+$DB = new Database();
 ```
