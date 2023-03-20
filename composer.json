@@ -1,0 +1,19 @@
+{
+    "name": "derilkillms/pdo-orm",
+    "description": "orm connection with pdo driver",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Derilkillms\\PdoOrm\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Deril",
+            "email": "derilkillms@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
