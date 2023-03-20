@@ -5,6 +5,9 @@
  * Github   : @derilkillms
  */
 
+namespace Derilkillms\PdoOrm;
+use PDO;
+
 class Database{
 
 	private $dbh;

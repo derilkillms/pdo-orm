@@ -28,6 +28,8 @@ $CFG->prefix    = 'd_';
 
 require_once(__DIR__ .'/vendor/autoload.php'); // add derilkillms/pdo-orm/Database.php if not autoloaded
 
+use Derilkillms\PdoOrm\Database;
+
 $DB = new Database();
 ```
 
