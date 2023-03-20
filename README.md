@@ -26,6 +26,16 @@ $CFG->dbuser    = 'root';
 $CFG->dbpass    = '';
 $CFG->prefix    = 'd_';
 
-require_once(__DIR__ .'/vendor/autoload.php');
+require_once(__DIR__ .'/vendor/autoload.php'); // add derilkillms/pdo-orm/Database.php if not autoloaded
+
 $DB = new Database();
+```
+
+***Use query**
+```php
+$users = $DB->get_records_sql("SELECT * FROM {users} where city=?",array('ciamis')); //for get rows data 
+
+$user = $DB->get_record_sql("SELECT * FROM {user} where id=?",array(1)); // for get row data / one data 
+
+$user = $DB->execute("DELETE FROM {user} WHERE id=?",array(1)); // for execute query like insert update delete
 ```
