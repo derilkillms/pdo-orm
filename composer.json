@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Derilkillms\\PdoOrm\\": "src/derilkillms/pdo-orm/Database.php"
+            "Derilkillms\\PdoOrm\\": ""
         }
     },
     "authors": [
