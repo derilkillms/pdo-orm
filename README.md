@@ -44,10 +44,12 @@ $user = $DB->execute("DELETE FROM {user} WHERE id=?",array(1)); // for execute q
 
 **DML simple query**
 ```php
+
+//intialize key and value with object
 $data = new stdClass();
 $data->name = 'test';
 $data->value = 'test';
-
+//insert record
 $insert =  $DB->insert_record('table', $data);
 
 
@@ -55,8 +57,8 @@ $data = new stdClass();
 $data->id = 1; //id params is important for update
 $data->name = 'tests';
 $data->value = 'tests';
-
+//update record
 $update =  $DB->update_record('table', $data);
-
+//delete record
 $delete = $DB->delete_record('table','id=?',array(7));
 ```
