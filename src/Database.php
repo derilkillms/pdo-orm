@@ -94,26 +94,130 @@ class Database{
 
 		return (object) $this->singgle($params);
 
-	
+
 	}
 
-    public function get_params( $query = null)
-    {
-        
+	public function get_params( $query = null)
+	{
+
         // Regular expression to match parameter keys
-        $pattern = '/:[a-zA-Z0-9_]*/';
+		$pattern = '/:[a-zA-Z0-9_]*/';
 
         // Find all parameter keys in the query string
-        preg_match_all($pattern, $query, $matches);
+		preg_match_all($pattern, $query, $matches);
 
         // Get parameter keys as array
-        return $matches[0];
+		return $matches[0];
 
+	}
+
+
+ /**
+     * Insert new record into database, as fast as possible, no safety checks, lobs not supported.
+
+  */
+ public function insert_record_raw($table, $params, $returnid=true, $bulk=false, $customsequence=false) {
+
+ 	$fields = implode(',', array_keys($params));
+ 	$qms    = array_fill(0, count($params), '?');
+ 	$qms    = implode(',', $qms);
+
+ 	$params =  array_values($params);
+
+ 	$sql = "INSERT INTO {{$table}} ($fields) VALUES($qms)";
+
+ 	return $this->execute($sql,$params);
+ }
+
+ /**
+   * Insert a record into a table and return the "id" field if required,
+   * Some conversions and safety checks are carried out. Lobs are supported.
+   * If the return ID isn't required, then this just reports success as true/false.
+ */
+
+ public function insert_record($table, $dataobject, $returnid=true, $bulk=false) {
+ 	$dataobject = (array)$dataobject;
+ 	$cleaned = array();
+
+
+
+ 	foreach ($dataobject as $field=>$value) {
+ 		if ($field === 'id') {
+ 			continue;
+ 		}
+ 		$cleaned[$field] = $value;
+ 	}
+
+ 	if (empty($cleaned)) {
+ 		return false;
+ 	}
+
+
+ 	return $this->insert_record_raw($table, $cleaned, $returnid, $bulk);
+ }
+
+
+/**
+     * Update record in database, as fast as possible, no safety checks, lobs not supported.
+*/
+public function update_record_raw($table, $params, $bulk=false) {
+	$params = (array)$params;
+
+	if (!isset($params['id'])) {
+		throw new coding_exception('moodle_database::update_record_raw() id field must be specified.');
+	}
+	$id = $params['id'];
+	unset($params['id']);
+
+	if (empty($params)) {
+		throw new coding_exception('moodle_database::update_record_raw() no fields found.');
+	}
+
+	$sets = array();
+	foreach ($params as $field=>$value) {
+		$sets[] = "$field = ?";
+	}
+
+        $params[] = $id; // last ? in WHERE condition
+
+        $params = array_values($params);
+
+        $sets = implode(',', $sets);
+        $sql = "UPDATE {{$table}} SET $sets WHERE id=?";
+        return $this->execute($sql, $params);
     }
 
-	
+/**
+   * Update a record in a table
+   *
+   * $dataobject is an object containing needed data
+   * Relies on $dataobject having a variable "id" to
+   * specify the record to update
+*/
+public function update_record($table, $dataobject, $bulk=false) {
+	$dataobject = (array)$dataobject;
+
+	$cleaned = array();
+
+	foreach ($dataobject as $field=>$value) {
+		if (is_bool($value)) {
+                $value = (int)$value; // prevent "false" problems
+            }
+            $cleaned[$field] = $value;
+        }
+
+        return $this->update_record_raw($table, $cleaned, $bulk);
+    }
+
+
+    public function delete_record($table, $select=null, array $params=null) {
+    	$sql = "DELETE FROM {{$table}}";
+    	if ($select) {
+    		$sql .= " WHERE $select";
+    	}
+    	return $this->execute($sql, $params);
+    }
+
+
 }
-
-
-
 ?>

@@ -33,11 +33,30 @@ use Derilkillms\PdoOrm\Database;
 $DB = new Database();
 ```
 
-***Use query**
+**Use query sql**
 ```php
 $users = $DB->get_records_sql("SELECT * FROM {users} where city=?",array('ciamis')); //for get rows data 
 
 $user = $DB->get_record_sql("SELECT * FROM {user} where id=?",array(1)); // for get row data / one data 
 
 $user = $DB->execute("DELETE FROM {user} WHERE id=?",array(1)); // for execute query like insert update delete
+```
+
+**DML simple query**
+```php
+$data = new stdClass();
+$data->name = 'test';
+$data->value = 'test';
+
+$insert =  $DB->insert_record('table', $data);
+
+
+$data = new stdClass();
+$data->id = 1; //id params is important for update
+$data->name = 'tests';
+$data->value = 'tests';
+
+$update =  $DB->update_record('table', $data);
+
+$delete = $DB->delete_record('table','id=?',array(7));
 ```
